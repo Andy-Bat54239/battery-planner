@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1081407281747",
+    "project_id": "battery-planner",
+    "storage_bucket": "battery-planner.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081407281747:android:623e709d0f43dd7bdac4a6",
+        "android_client_info": {
+          "package_name": "com.example.battery_planner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq5-Rd4D8r1PZU_ezVs7LtdGfV2hKeWlo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
