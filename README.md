@@ -1,17 +1,11 @@
-# battery_planner
+# Battery Planner
 
-A new Flutter project.
+Plan your phone use hour by hour and see whether the battery survives the day. My data is now saved on the phone with shared_preferences,
+so nothing is lost when the app closes, and it shows today's weather in Kigali from the Open-Meteo API.
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Before closing](screenshots/before.png)
+![After running again](screenshots/after.png)
+![Live data from an API](screenshots/api.png)
+![No internet](screenshots/no-internet.png)

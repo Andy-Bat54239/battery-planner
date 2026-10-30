@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'edit_hour_screen.dart';
 import 'models.dart';
 import 'simulation.dart';
+import 'storage.dart';
+import 'weather.dart';
 
 class DayScreen extends StatefulWidget{
   const DayScreen({super.key});
@@ -13,6 +15,18 @@ class DayScreen extends StatefulWidget{
 
 class _DayScreenState extends State<DayScreen> {
   List<HourPlan> day = sampleDay();
+
+  @override
+  void initState() {
+    super.initState();
+    load();
+  }
+
+  Future<void> load() async {
+    final saved = await loadDay();
+    if(!mounted || saved == null) return;
+    setState(() => day = saved);
+  }
 
   String clock(int hour) => '${hour.toString().padLeft(2, '0')}:00';
 
@@ -29,6 +43,7 @@ class _DayScreenState extends State<DayScreen> {
 
     if(!mounted || result == null) return;
     setState(() => day[index] = result);
+    await saveDay(day);
   }
 
   @override
@@ -40,6 +55,7 @@ class _DayScreenState extends State<DayScreen> {
       body: Column(
         children: [
           _Banner(result: result, clock: clock),
+          const _WeatherCard(),
           Expanded(
             child: ListView.builder(
               itemCount: day.length,
@@ -82,6 +98,90 @@ class _Banner extends StatelessWidget{
           color: dies ? scheme.onErrorContainer : scheme.onPrimaryContainer,
           fontWeight: FontWeight.bold,
         ),
+      ),
+    );
+  }
+}
+
+class _WeatherCard extends StatefulWidget{
+  const _WeatherCard();
+
+  @override
+  State<_WeatherCard> createState() => _WeatherCardState();
+}
+
+class _WeatherCardState extends State<_WeatherCard>{
+  Weather? weather;
+  bool loading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    load();
+  }
+
+  Future<void> load() async {
+    try {
+      final result = await fetchWeather();
+      if(!mounted) return;
+      setState(() {
+        weather = result;
+        loading = false;
+        error = null;
+      });
+    } catch (e) {
+      if(!mounted) return;
+      setState(() {
+        loading = false;
+        error = 'Could not load the weather. Check your internet connection.';
+      });
+    }
+  }
+
+  void retry() {
+    setState(() {
+      loading = true;
+      error = null;
+    });
+    load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget content;
+    if(loading) {
+      content = const Center(child: CircularProgressIndicator());
+    } else if(error != null) {
+      content = Row(
+        children: [
+          const Icon(Icons.wifi_off),
+          const SizedBox(width: 12),
+          Expanded(child: Text(error!)),
+          TextButton(onPressed: retry, child: const Text('Retry')),
+        ],
+      );
+    } else {
+      final w = weather!;
+      content = Row(
+        children: [
+          const Icon(Icons.wb_sunny_outlined),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Kigali today: ${w.temperature.round()}°C, ${describe(w.code)}'
+              ' · ${w.humidity}% humidity · ${w.wind.round()} km/h wind',
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: content,
       ),
     );
   }

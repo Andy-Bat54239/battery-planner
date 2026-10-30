@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'day_screen.dart';
 
-void main() => runApp(const BatteryApp());
+void main() {
+  runApp(const BatteryApp());
+}
 
 class BatteryApp extends StatelessWidget{
   const BatteryApp({super.key});

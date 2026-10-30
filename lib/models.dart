@@ -22,6 +22,17 @@ class HourPlan{
   bool charging;
 
   HourPlan copy() => HourPlan(activity, charging: charging);
+
+  Map<String, dynamic> toJson() {
+    return {'activity': activity.name, 'charging': charging};
+  }
+
+  factory HourPlan.fromJson(Map<String, dynamic> json) {
+    return HourPlan(
+      Activity.values.byName(json['activity'] as String),
+      charging: json['charging'] as bool,
+    );
+  }
 }
 
 List<HourPlan> sampleDay(){
