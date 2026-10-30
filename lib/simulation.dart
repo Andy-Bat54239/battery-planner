@@ -30,3 +30,22 @@ DayResult simulate(List<HourPlan> day, {int start = 100}) {
   }
   return DayResult(battery, deathHour);
 }
+
+// Adds charging where the battery dies, again and again, until the day survives.
+// Returns only the hours that changed.
+List<HourPlan> fixDay(List<HourPlan> day) {
+  final fixed = [for (final plan in day) plan.copy()];
+
+  while (true) {
+    final result = simulate(fixed);
+    if (result.survives) break;
+    final index = result.deathHour! - firstHour;
+    if (fixed[index].charging) break;
+    fixed[index].charging = true;
+  }
+
+  return [
+    for (var i = 0; i < day.length; i++)
+      if (fixed[i].charging != day[i].charging) fixed[i],
+  ];
+}

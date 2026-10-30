@@ -16,6 +16,15 @@ Future<void> saveHour(HourPlan plan) {
   return myHours().doc('${plan.hour}').set(plan.toMap());
 }
 
+// Several hours at once: all of them are saved, or none
+Future<void> saveHours(List<HourPlan> plans) async {
+  final batch = FirebaseFirestore.instance.batch();
+  for (final plan in plans) {
+    batch.set(myHours().doc('${plan.hour}'), plan.toMap());
+  }
+  await batch.commit();
+}
+
 // Sample data, written once when a new account is created
 Future<void> addSampleDay() async {
   final batch = FirebaseFirestore.instance.batch();

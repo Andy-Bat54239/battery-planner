@@ -14,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen>{
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _busy = false;
+  bool _hidePassword = true;
   String? _error;
 
   @override
@@ -76,10 +77,22 @@ class _LoginScreenState extends State<LoginScreen>{
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Icon(
+                  Icons.battery_charging_full,
+                  size: 72,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 8),
                 const Text(
                   'Battery Planner',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Plan your day, hour by hour',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 32),
                 TextFormField(
@@ -101,10 +114,18 @@ class _LoginScreenState extends State<LoginScreen>{
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _password,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  obscureText: _hidePassword,
+                  decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _hidePassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      tooltip: _hidePassword ? 'Show password' : 'Hide password',
+                      onPressed: () =>
+                          setState(() => _hidePassword = !_hidePassword),
+                    ),
                   ),
                   validator: (v) =>
                       (v ?? '').length < 6 ? 'At least 6 characters' : null,

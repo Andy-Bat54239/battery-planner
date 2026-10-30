@@ -16,4 +16,19 @@ extension ActivityStyle on Activity{
         return Icons.bedtime_outlined;
     }
   }
+
+  Color get color {
+    switch (this) {
+      case Activity.video:
+        return Colors.deepPurple;
+      case Activity.games:
+        return Colors.deepOrange;
+      case Activity.chat:
+        return Colors.blue;
+      case Activity.music:
+        return Colors.teal;
+      case Activity.idle:
+        return Colors.blueGrey;
+    }
+  }
 }

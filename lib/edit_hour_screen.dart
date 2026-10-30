@@ -108,7 +108,7 @@ class _ActivityCard extends StatelessWidget{
         ),
         child: Column(
           children: [
-            Icon(activity.icon, size: 28),
+            Icon(activity.icon, size: 28, color: activity.color),
             const SizedBox(height: 6),
             Text(activity.label, style: const TextStyle(fontWeight: FontWeight.w600)),
             Text('-${activity.drain}%', style: Theme.of(context).textTheme.bodySmall),
