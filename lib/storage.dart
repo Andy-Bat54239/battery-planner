@@ -1,19 +1,26 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'models.dart';
 
-const _dayKey = 'day';
-
-Future<void> saveDay(List<HourPlan> day) async {
-  final prefs = await SharedPreferences.getInstance();
-  final list = day.map((plan) => plan.toJson()).toList();
-  await prefs.setString(_dayKey, jsonEncode(list));
+// The signed-in user's plan: users/{uid}/hours
+CollectionReference<Map<String, dynamic>> myHours() {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('hours');
 }
 
-Future<List<HourPlan>?> loadDay() async {
-  final prefs = await SharedPreferences.getInstance();
-  final saved = prefs.getString(_dayKey);
-  if (saved == null) return null;
-  final list = jsonDecode(saved) as List;
-  return list.map((x) => HourPlan.fromJson(x as Map<String, dynamic>)).toList();
+// The hour is the document id, so saving an hour twice rewrites it
+Future<void> saveHour(HourPlan plan) {
+  return myHours().doc('${plan.hour}').set(plan.toMap());
+}
+
+// Sample data, written once when a new account is created
+Future<void> addSampleDay() async {
+  final batch = FirebaseFirestore.instance.batch();
+  for (final plan in sampleDay()) {
+    batch.set(myHours().doc('${plan.hour}'), plan.toMap());
+  }
+  await batch.commit();
 }

@@ -8,6 +8,7 @@ class DayResult{
 
   bool get survives => deathHour == null;
   int? get finalBattery => survives ? battery.last : null;
+  int get lowest => battery.whereType<int>().fold(100, (a, b) => a < b ? a : b);
 }
 
 DayResult simulate(List<HourPlan> day, {int start = 100}) {

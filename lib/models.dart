@@ -16,21 +16,23 @@ const int lastHour = 23;
 const int chargeAmount = 20;
 
 class HourPlan{
-  HourPlan(this.activity, {this.charging = false});
+  HourPlan(this.hour, this.activity, {this.charging = false});
 
+  final int hour;
   Activity activity;
   bool charging;
 
-  HourPlan copy() => HourPlan(activity, charging: charging);
+  HourPlan copy() => HourPlan(hour, activity, charging: charging);
 
-  Map<String, dynamic> toJson() {
-    return {'activity': activity.name, 'charging': charging};
+  Map<String, dynamic> toMap() {
+    return {'hour': hour, 'activity': activity.name, 'charging': charging};
   }
 
-  factory HourPlan.fromJson(Map<String, dynamic> json) {
+  factory HourPlan.fromMap(Map<String, dynamic> map) {
     return HourPlan(
-      Activity.values.byName(json['activity'] as String),
-      charging: json['charging'] as bool,
+      (map['hour'] as num).toInt(),
+      Activity.values.byName(map['activity'] as String),
+      charging: map['charging'] as bool,
     );
   }
 }
@@ -43,5 +45,8 @@ List<HourPlan> sampleDay(){
     Activity.chat, Activity.video, Activity.games, Activity.chat,
     Activity.idle,
   ];
-  return [for (final a in activities) HourPlan(a)];
-}
+  return [
+    for (var i = 0; i < activities.length; i++)
+      HourPlan(firstHour + i, activities[i]),
+  ];
+} 

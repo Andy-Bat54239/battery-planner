@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'day_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'auth_gate.dart';
 
-void main() {
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const BatteryApp());
 }
 
@@ -14,7 +17,7 @@ class BatteryApp extends StatelessWidget{
       debugShowCheckedModeBanner: false,
       title: 'Battery Planner',
       theme: ThemeData(colorSchemeSeed: Colors.green),
-      home: const DayScreen(),
+      home: const AuthGate(),
     );
   }
 }
