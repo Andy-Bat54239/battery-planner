@@ -62,6 +62,29 @@ class DayScreen extends StatelessWidget{
     }
   }
 
+  Future<void> confirmClear(BuildContext context) async {
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear my day?'),
+        content: const Text('This deletes every hour of your plan.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+        ],
+      ),
+    );
+    if(sure != true) return;
+    try {
+      await clearDay();
+    } catch (e) {
+      if(!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not delete your plan.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +99,11 @@ class DayScreen extends StatelessWidget{
             ),
             tooltip: 'Light / dark mode',
             onPressed: () => toggleThemeMode(Theme.of(context).brightness),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: 'Clear my day',
+            onPressed: () => confirmClear(context),
           ),
           IconButton(
             icon: const Icon(Icons.logout),

@@ -33,3 +33,13 @@ Future<void> addSampleDay() async {
   }
   await batch.commit();
 }
+
+// Delete every hour of the signed-in user's plan, all or none
+Future<void> clearDay() async {
+  final snapshot = await myHours().get();
+  final batch = FirebaseFirestore.instance.batch();
+  for (final doc in snapshot.docs) {
+    batch.delete(doc.reference);
+  }
+  await batch.commit();
+}
