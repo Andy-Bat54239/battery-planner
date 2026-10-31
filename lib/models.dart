@@ -49,4 +49,4 @@ List<HourPlan> sampleDay(){
     for (var i = 0; i < activities.length; i++)
       HourPlan(firstHour + i, activities[i]),
   ];
-}  
+}
